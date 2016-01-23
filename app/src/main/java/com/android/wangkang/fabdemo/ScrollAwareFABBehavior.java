@@ -45,7 +45,10 @@ public class ScrollAwareFABBehavior extends CoordinatorLayout.Behavior<FloatingA
     }
 
     private void animateOut(final FloatingActionsMenu button){
-            ViewCompat.animate(button).translationY(500)
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) button.getLayoutParams();
+        int fabBottomMargin = lp.bottomMargin;
+        int distanceToScroll = button.getHeight() + fabBottomMargin;
+            ViewCompat.animate(button).translationY(distanceToScroll)
                 .setInterpolator(INTERPOLATOR).withLayer()
                     .setListener(new ViewPropertyAnimatorListener() {
                         @Override
