@@ -31,10 +31,14 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
  * Courtesy: https://mzgreen.github.io/2015/06/23/How-to-hideshow-Toolbar-when-list-is-scrolling(part3)/
  */
 public class ScrollingFABBehavior extends CoordinatorLayout.Behavior<FloatingActionsMenu> {
+
+    //定义toolbar高度和状态栏高度
     private int toolbarHeight;
     private double statusBarHeight;
     public ScrollingFABBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        //得到两个高度值
         this.toolbarHeight = getToolbarHeight(context);
         this.statusBarHeight=getStatusBarHeight(context);
 
@@ -42,20 +46,22 @@ public class ScrollingFABBehavior extends CoordinatorLayout.Behavior<FloatingAct
 
     @Override
     public boolean layoutDependsOn(CoordinatorLayout parent, FloatingActionsMenu fab, View dependency) {
+        //设定依赖的父布局为AppBarLayout
         return dependency instanceof AppBarLayout;
     }
 
     @Override
     public boolean onDependentViewChanged(CoordinatorLayout parent, FloatingActionsMenu fab, View dependency) {
         if (dependency instanceof AppBarLayout) {
+            //FAB的自身高度+据底边高度的和=要实现FAB隐藏需要向下移动的距离
             CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
             int fabBottomMargin = lp.bottomMargin;
             int distanceToScroll = fab.getHeight() + fabBottomMargin;
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-
+                //toolbar被移走的距离与本身高度的比值
                 float ty=dependency.getY()-(float)statusBarHeight;
                 float ratio = ty / (float) toolbarHeight;
-
+                //toolbar被移走几分之几，fab就向下滑几分之几
                 fab.setTranslationY(-distanceToScroll * ratio);
             }
         }
